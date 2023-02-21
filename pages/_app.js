@@ -1,11 +1,12 @@
-function HomePage(props) {
+import Layout from '../components/layout/layout';
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps }) {
   return (
-    <ul>
-      <li>Product 1</li>
-      <li>Product 2</li>
-      <li>Product 3</li>
-    </ul>
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
   );
 }
 
-export default HomePage;
+export default MyApp;
