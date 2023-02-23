@@ -9,13 +9,12 @@ import ErrorAlert from '../../components/ui/error-alert';
 function EventDetailPage(props) {
 
   const event = props.selectedEvent;
-  console.log(event)
 
   if (!event) {
     return (
-      <ErrorAlert>
-        <p>No event found!</p>
-      </ErrorAlert>
+      <div className='center'>
+        <p>Loading!</p>
+      </div>
     );
   }
 
@@ -51,7 +50,7 @@ export async function getStaticPaths () {
   const paths = events.map(event => ({params: {eventId: event.id}}))
   return {
     paths: paths,
-    fallback: false
+    fallback: true
   };
 }
 
