@@ -1,16 +1,25 @@
 import classes from "./newsletter-registration.module.css";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
+import NotificationContext from "../../store/notification-context";
 
 function NewsletterRegistration() {
+  const notificationCtx = useContext(NotificationContext);
   const [message, setMessage] = useState("");
   const emailRef = useRef();
 
   function registrationHandler(event) {
     event.preventDefault();
     const email = emailRef.current.value;
+
     if (!email) {
       return setMessage("Please send a valid email");
     }
+
+    notificationCtx.showNotification({
+      title: "Signing up",
+      message: "Registering",
+      status: "pending",
+    });
 
     const emailData = { email: email };
 
@@ -21,8 +30,28 @@ function NewsletterRegistration() {
         "Content-Type": "application/json",
       },
     })
-      .then((repsonse) => repsonse.json())
-      .then((data) => console.log(data));
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return response.json().then((data) => {
+          throw new Error(data.message || "Something wnet wrong!");
+        });
+      })
+      .then((data) => {
+        notificationCtx.showNotification({
+          title: "Signing up",
+          message: "Succesfully registered for newsletter!!",
+          status: "success",
+        });
+      })
+      .catch((error) => {
+        notificationCtx.showNotification({
+          title: "error",
+          message: error.message || "something went wrong!",
+          status: "error",
+        });
+      });
 
     // fetch user input (state or refs)
     // optional: validate input
